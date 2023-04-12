@@ -14,10 +14,10 @@ public class XObjectReaderTest {
     @Test
     public void testCase1() throws XMLStreamException {
         InputStream is = XObjectReaderTest.class.getResourceAsStream("case1.xml");
-        XObjectReader p = new XObjectReader();
+        XObjectReader reader = new XObjectReader();
 
         Company c = new Company();
-        p.run(c, is);
+        reader.run(c, is);
 
         System.out.println(c.staffs.size());
         for (Staff s : c.staffs) {

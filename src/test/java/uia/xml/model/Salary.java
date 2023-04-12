@@ -2,12 +2,14 @@ package uia.xml.model;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 import uia.xml.TagInfo;
 import uia.xml.XObjectR;
+import uia.xml.XObjectW;
 
 @TagInfo(name = "salary")
-public class Salary implements XObjectR {
+public class Salary implements XObjectR, XObjectW {
 
     private final Staff staff;
 
@@ -35,5 +37,13 @@ public class Salary implements XObjectR {
     @Override
     public String toString() {
         return this.currency + "=" + this.pay;
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement("salary");
+        writer.writeAttribute("currency", this.currency);
+        writer.writeCharacters("" + this.pay);
+        writer.writeEndElement();
     }
 }
