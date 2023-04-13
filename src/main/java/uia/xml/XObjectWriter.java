@@ -29,7 +29,7 @@ public class XObjectWriter {
 
         writer.writeStartElement(tag1.name());
 
-        Field[] fs = clz.getDeclaredFields();
+        Field[] fs = getAllFields(clz, new Field[] {});
         // attributes
         for (Field f : fs) {
             AttrInfo attr = f.getDeclaredAnnotation(AttrInfo.class);
@@ -103,5 +103,20 @@ public class XObjectWriter {
         }
 
         writer.writeEndElement();
+    }
+
+    private Field[] getAllFields(Class<?> clz, Field[] fs1) {
+        Field[] fs2 = clz.getDeclaredFields();
+
+        Field[] result = new Field[fs1.length + fs2.length];
+        for (int i = 0; i < fs1.length; i++) {
+            result[i] = fs1[i];
+        }
+        for (int i = 0; i < fs2.length; i++) {
+            result[fs1.length + i] = fs2[i];
+        }
+
+        Class<?> sclz = clz.getSuperclass();
+        return sclz == null ? result : getAllFields(sclz, result);
     }
 }

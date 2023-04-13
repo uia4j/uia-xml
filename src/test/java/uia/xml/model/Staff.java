@@ -3,18 +3,14 @@ package uia.xml.model;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import uia.xml.AttrInfo;
 import uia.xml.ContentInfo;
 import uia.xml.TagInfo;
 import uia.xml.XObjectR;
 
 @TagInfo(name = "staff")
-public class Staff implements XObjectR {
+public class Staff extends Staff0 implements XObjectR {
 
     private final Company company;
-
-    @AttrInfo(name = "id")
-    public String id;
 
     @ContentInfo(name = "name")
     public String name;

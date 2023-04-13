@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Picture id="p1" />
+    <Picture id="p2" />
+    <Text id="t1" />
+    <Picture id="p3" />
+    <Calendar id="c1" />
+</Program>
