@@ -2,19 +2,21 @@ package uia.xml.model;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
+import uia.xml.AttrInfo;
+import uia.xml.ContentInfo;
 import uia.xml.TagInfo;
 import uia.xml.XObjectR;
-import uia.xml.XObjectW;
 
 @TagInfo(name = "salary")
-public class Salary implements XObjectR, XObjectW {
+public class Salary implements XObjectR {
 
     private final Staff staff;
 
+    @AttrInfo(name = "currency")
     public String currency;
 
+    @ContentInfo()
     public int pay;
 
     public Salary(Staff staff) {
@@ -37,13 +39,5 @@ public class Salary implements XObjectR, XObjectW {
     @Override
     public String toString() {
         return this.currency + "=" + this.pay;
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement("salary");
-        writer.writeAttribute("currency", this.currency);
-        writer.writeCharacters("" + this.pay);
-        writer.writeEndElement();
     }
 }

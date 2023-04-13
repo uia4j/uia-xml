@@ -24,5 +24,10 @@
 			<artifactId>stax-api</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.carrotsearch.thirdparty</groupId>
+			<artifactId>simple-xml-safe</artifactId>
+			<version>2.7.1</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TagInfo {
+public @interface AttrInfo {
 
-    String name() default "";
+    String name();
 }

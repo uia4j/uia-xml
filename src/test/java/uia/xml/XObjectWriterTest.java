@@ -11,7 +11,7 @@ import uia.xml.model.Company;
 public class XObjectWriterTest {
 
     @Test
-    public void testCase1() throws Exception {
+    public void testCase2() throws Exception {
         InputStream is = XObjectWriterTest.class.getResourceAsStream("case1.xml");
         XObjectReader reader = new XObjectReader();
 
@@ -19,7 +19,7 @@ public class XObjectWriterTest {
         reader.run(c, is);
 
         XObjectWriter writer = new XObjectWriter();
-        FileOutputStream fos = new FileOutputStream(new File("d:/temp/case1.xml"));
+        FileOutputStream fos = new FileOutputStream(new File("d:/temp/case2.xml"));
         writer.run(c, fos);
         fos.flush();
         fos.close();

@@ -1,31 +1,31 @@
 package uia.xml.model;
 
-import static uia.xml.XMLStreamHelper._attr;
-import static uia.xml.XMLStreamHelper._cdata;
-import static uia.xml.XMLStreamHelper._chars;
-import static uia.xml.XMLStreamHelper._elem;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
+import uia.xml.AttrInfo;
+import uia.xml.ContentInfo;
 import uia.xml.TagInfo;
 import uia.xml.XObjectR;
-import uia.xml.XObjectW;
 
 @TagInfo(name = "staff")
-public class Staff implements XObjectR, XObjectW {
+public class Staff implements XObjectR {
 
     private final Company company;
 
+    @AttrInfo(name = "id")
     public String id;
 
+    @ContentInfo(name = "name")
     public String name;
 
+    @ContentInfo(name = "role")
     public String role;
 
+    @TagInfo
     public Salary salary;
 
+    @ContentInfo(name = "bio", cdata = true)
     public String bio;
 
     public Staff(Company company) {
@@ -63,16 +63,5 @@ public class Staff implements XObjectR, XObjectW {
             this.bio = reader.getText();
         }
         return this;
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement("staff");
-        _attr(writer, "id", this.id);
-        _chars(writer, "name", this.name);
-        _chars(writer, "role", this.role);
-        _elem(writer, this.salary);
-        _cdata(writer, "bio", this.bio);
-        writer.writeEndElement();
     }
 }

@@ -23,7 +23,7 @@ public class XObjectReader {
         while (reader.hasNext()) {
             TagInfo tag = obj.getClass().getDeclaredAnnotation(TagInfo.class);
             if (tag == null) {
-                throw new XMLStreamException("No TagInfo definition in " + obj.getClass().getName());
+                throw new XMLStreamException("No TagInfo definition on " + obj.getClass().getName());
             }
 
             eventType = reader.next();
