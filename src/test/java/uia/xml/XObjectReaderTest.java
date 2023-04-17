@@ -2,26 +2,32 @@ package uia.xml;
 
 import java.io.InputStream;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.junit.Test;
 
-import uia.xml.model.Company;
-import uia.xml.model.Staff;
+import uia.xml.model1.Company;
+import uia.xml.model2.Program;
+import uia.xml.model3.Simple;
 
 public class XObjectReaderTest {
 
     @Test
-    public void testCase1() throws XMLStreamException {
+    public void testCase1() throws Exception {
         InputStream is = XObjectReaderTest.class.getResourceAsStream("case1.xml");
-        XObjectReader reader = new XObjectReader();
+        Object obj = XObjectReader.run(Company.class, is);
+        System.out.println(obj);
+    }
 
-        Company c = new Company();
-        reader.run(c, is);
+    @Test
+    public void testCase2() throws Exception {
+        InputStream is = XObjectReaderTest.class.getResourceAsStream("case2.xml");
+        Program obj = XObjectReader.run(Program.class, is);
+        System.out.println(obj);
+    }
 
-        System.out.println(c.staffs.size());
-        for (Staff s : c.staffs) {
-            System.out.printf("%s %s %s %s\n", s.id, s.name, s.role, s.salary);
-        }
+    @Test
+    public void testCase3() throws Exception {
+        InputStream is = XObjectReaderTest.class.getResourceAsStream("case3.xml");
+        Simple obj = XObjectReader.run(Simple.class, is);
+        System.out.println(obj);
     }
 }

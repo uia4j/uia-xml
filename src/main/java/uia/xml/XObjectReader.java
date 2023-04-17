@@ -1,16 +1,59 @@
 package uia.xml;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
-public class XObjectReader {
+import uia.xml.nodes.TagNode;
 
-    public void run(XObjectR obj, InputStream fis) throws XMLStreamException {
+public final class XObjectReader {
+
+    public static <T> T run(Class<T> clz, File file) throws Exception {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            return run(clz, fis);
+        }
+        finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
+    }
+
+    public static <T> T run(Class<T> clz, String xmlContent) throws Exception {
+        InputStream bais = null;
+        try {
+            bais = new ByteArrayInputStream(xmlContent.getBytes());
+            return run(clz, bais);
+        }
+        finally {
+            if (bais != null) {
+                bais.close();
+            }
+        }
+    }
+
+    public static <T> T run(Class<T> clz, String xmlContent, String charsetName) throws Exception {
+        ByteArrayInputStream bais = null;
+        try {
+            bais = new ByteArrayInputStream(xmlContent.getBytes(charsetName));
+            return run(clz, bais);
+        }
+        finally {
+            if (bais != null) {
+                bais.close();
+            }
+        }
+    }
+
+    public static <T> T run(Class<T> clz, InputStream fis) throws Exception {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 
         // https://rules.sonarsource.com/java/RSPEC-2755
@@ -18,37 +61,18 @@ public class XObjectReader {
         xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
-        XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(fis);
-        int eventType = reader.getEventType();
-        while (reader.hasNext()) {
-            TagInfo tag = obj.getClass().getDeclaredAnnotation(TagInfo.class);
-            if (tag == null) {
-                throw new XMLStreamException("No TagInfo definition on " + obj.getClass().getName());
-            }
-
-            eventType = reader.next();
-            if (eventType == XMLEvent.START_ELEMENT) {
-                String name = reader.getName().getLocalPart();
-                if (name.equals(tag.name())) {
-                    obj = obj.start(reader);
+        T t = clz.newInstance();
+        XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(fis);
+        while (xmlReader.hasNext()) {
+            int event = xmlReader.next();
+            if (event == XMLEvent.START_ELEMENT) {
+                TagInfo tag = clz.getDeclaredAnnotation(TagInfo.class);
+                if (tag != null) {
+                    new TagNode(xmlReader.getLocalName(), t).read(xmlReader);
                 }
-                else {
-                    XObjectR sub = obj.subStart(reader, name);
-                    if (sub != obj) {
-                        sub.start(reader);
-                        obj = sub;
-                    }
-                }
-            }
-            else if (eventType == XMLEvent.END_ELEMENT) {
-                String name = reader.getName().getLocalPart();
-                if (name.equals(tag.name())) {
-                    obj = obj.end(reader);
-                }
-                else {
-                    obj = obj.subEnd(reader, name);
-                }
+                break;
             }
         }
+        return t;
     }
 }

@@ -22,7 +22,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AttrInfo {
+public @interface TagListElem {
 
-    String name() default "";
+    String name();
+
+    Class<?> type();
 }

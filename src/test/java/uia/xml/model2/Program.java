@@ -1,19 +1,29 @@
 package uia.xml.model2;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import uia.xml.TagInfo;
+import uia.xml.TagListElem;
 import uia.xml.TagListInfo;
 
 @TagInfo(name = "Program")
 public class Program {
 
-    @TagListInfo(classes = { Picture.class, Text.class, Calendar.class })
-    public List<Panel> panels;
+    @TagListInfo(
+            inline = true,
+            elems = {
+                    @TagListElem(name = "Picture", type = Picture.class),
+                    @TagListElem(name = "Text", type = Text.class),
+                    @TagListElem(name = "Calendar", type = Calendar.class) })
+    public ArrayList<Panel> panels;
 
     public Program() {
-        this.panels = new ArrayList<>();
+        this.panels = new ArrayList<Panel>();
+    }
+
+    @Override
+    public String toString() {
+        return this.panels.toString();
     }
 
 }

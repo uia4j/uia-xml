@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Program>
-    <Picture id="p1" />
+    <Picture id="p1">c:\abc\def\xyz.pbg</Picture>
     <Picture id="p2" />
     <Text id="t1" />
     <Picture id="p3" />

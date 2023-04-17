@@ -3,6 +3,8 @@ package uia.xml;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -15,37 +17,41 @@ public class XObjectWriter {
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(fos);
         writer.writeStartDocument();
-        run(obj, writer);
+
+        TagInfo tag = obj.getClass().getDeclaredAnnotation(TagInfo.class);
+
+        run(obj, tag.name(), writer);
         writer.writeEndDocument();
     }
 
-    private void run(Object obj, XMLStreamWriter writer) throws XMLStreamException {
+    private void run(Object obj, String tagName, XMLStreamWriter writer) throws XMLStreamException {
         Class<?> clz = obj.getClass();
 
-        TagInfo tag1 = clz.getDeclaredAnnotation(TagInfo.class);
-        if (tag1 == null) {
-            throw new XMLStreamException("No TagInfo definition on " + obj.getClass().getName());
-        }
-
-        writer.writeStartElement(tag1.name());
-
-        Field[] fs = getAllFields(clz, new Field[] {});
+        writer.writeStartElement(tagName);
+        Field[] fs = XObject.fields(clz, new Field[] {});
         // attributes
         for (Field f : fs) {
+            f.setAccessible(true);
             AttrInfo attr = f.getDeclaredAnnotation(AttrInfo.class);
             if (attr == null) {
                 continue;
             }
 
+            String name = attr.name();
+            if (name.isEmpty()) {
+                name = f.getName();
+            }
             try {
-                writer.writeAttribute(attr.name(), "" + f.get(obj));
+                writer.writeAttribute(name, "" + f.get(obj));
             }
             catch (Exception ex) {
                 throw new XMLStreamException(ex);
             }
         }
+
         // elements
         for (Field f : fs) {
+            f.setAccessible(true);
             TagInfo tag2 = f.getDeclaredAnnotation(TagInfo.class);
             if (tag2 != null) {
                 Object v = null;
@@ -56,21 +62,73 @@ public class XObjectWriter {
                     throw new XMLStreamException(ex);
                 }
 
-                if (!tag2.name().isEmpty()) {
-                    writer.writeStartElement(tag2.name());
+                String name = tag2.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
                 }
-                if (v instanceof List) {
-                    List<?> vs = (List<?>) v;
-                    for (Object w : vs) {
-                        run(w, writer);
+                writer.writeStartElement(name);
+                run(v, name, writer);
+                writer.writeEndElement();
+                continue;
+            }
+
+            TagListInfo tag3 = f.getDeclaredAnnotation(TagListInfo.class);
+            if (tag3 != null) {
+                List<?> vs = null;
+                try {
+                    vs = (List<?>) f.get(obj);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
+
+                if (!tag3.inline()) {
+                    String name = tag3.name();
+                    if (name.isEmpty()) {
+                        name = f.getName();
+                    }
+                    writer.writeStartElement(name);
+                }
+                Map<String, TagListElem> mapping = new TreeMap<String, TagListElem>();
+                for (TagListElem elem : tag3.elems()) {
+                    mapping.put(elem.type().getName(), elem);
+                }
+                for (Object w : vs) {
+                    TagListElem elem = mapping.get(w.getClass().getName());
+                    if (elem != null) {
+                        run(w, elem.name(), writer);
                     }
                 }
-                else {
-                    run(v, writer);
-                }
-                if (!tag2.name().isEmpty()) {
+                if (!tag3.inline()) {
                     writer.writeEndElement();
                 }
+                continue;
+            }
+
+            PropInfo prop = f.getDeclaredAnnotation(PropInfo.class);
+            if (prop != null) {
+                Object v = null;
+                try {
+                    v = f.get(obj);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
+
+                String name = prop.name();
+                if (name == null) {
+                    name = f.getName();
+                }
+                writer.writeStartElement(name);
+                if (v != null) {
+                    if (prop.cdata()) {
+                        writer.writeCData("" + v);
+                    }
+                    else {
+                        writer.writeCharacters("" + v);
+                    }
+                }
+                writer.writeEndElement();
                 continue;
             }
 
@@ -84,9 +142,6 @@ public class XObjectWriter {
                     throw new XMLStreamException(ex);
                 }
 
-                if (!cont.name().isEmpty()) {
-                    writer.writeStartElement(cont.name());
-                }
                 if (v != null) {
                     if (cont.cdata()) {
                         writer.writeCData("" + v);
@@ -95,28 +150,9 @@ public class XObjectWriter {
                         writer.writeCharacters("" + v);
                     }
                 }
-                if (!cont.name().isEmpty()) {
-                    writer.writeEndElement();
-                }
             }
-
         }
 
         writer.writeEndElement();
-    }
-
-    private Field[] getAllFields(Class<?> clz, Field[] fs1) {
-        Field[] fs2 = clz.getDeclaredFields();
-
-        Field[] result = new Field[fs1.length + fs2.length];
-        for (int i = 0; i < fs1.length; i++) {
-            result[i] = fs1[i];
-        }
-        for (int i = 0; i < fs2.length; i++) {
-            result[fs1.length + i] = fs2[i];
-        }
-
-        Class<?> sclz = clz.getSuperclass();
-        return sclz == null ? result : getAllFields(sclz, result);
     }
 }

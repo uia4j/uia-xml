@@ -26,5 +26,7 @@ public @interface TagListInfo {
 
     String name() default "";
 
-    Class<?>[] classes();
+    boolean inline() default false;
+
+    TagListElem[] elems();
 }

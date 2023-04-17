@@ -24,7 +24,5 @@ import java.lang.annotation.RetentionPolicy;;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ContentInfo {
 
-    String name() default "";
-
     boolean cdata() default false;
 }

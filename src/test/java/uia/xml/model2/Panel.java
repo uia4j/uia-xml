@@ -1,10 +1,15 @@
 package uia.xml.model2;
 
-import uia.xml.TagInfo;
+import uia.xml.AttrInfo;
 
 public abstract class Panel {
 
-    @TagInfo(name = "attr")
-    public String id;
+    @AttrInfo(name = "id")
+    private String id;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + this.id;
+    }
 
 }
