@@ -18,7 +18,7 @@ public class XObjectWriter {
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(fos);
         writer.writeStartDocument();
 
-        TagInfo tag = obj.getClass().getDeclaredAnnotation(TagInfo.class);
+        TagInfo tag = XObject.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
 
         run(obj, tag.name(), writer);
         writer.writeEndDocument();
@@ -32,7 +32,7 @@ public class XObjectWriter {
         // attributes
         for (Field f : fs) {
             f.setAccessible(true);
-            AttrInfo attr = f.getDeclaredAnnotation(AttrInfo.class);
+            AttrInfo attr = XObject.getDeclaredAnnotation(f, AttrInfo.class);
             if (attr == null) {
                 continue;
             }
@@ -52,7 +52,7 @@ public class XObjectWriter {
         // elements
         for (Field f : fs) {
             f.setAccessible(true);
-            TagInfo tag2 = f.getDeclaredAnnotation(TagInfo.class);
+            TagInfo tag2 = XObject.getDeclaredAnnotation(f, TagInfo.class);
             if (tag2 != null) {
                 Object v = null;
                 try {
@@ -72,7 +72,7 @@ public class XObjectWriter {
                 continue;
             }
 
-            TagListInfo tag3 = f.getDeclaredAnnotation(TagListInfo.class);
+            TagListInfo tag3 = XObject.getDeclaredAnnotation(f, TagListInfo.class);
             if (tag3 != null) {
                 List<?> vs = null;
                 try {
@@ -105,7 +105,7 @@ public class XObjectWriter {
                 continue;
             }
 
-            PropInfo prop = f.getDeclaredAnnotation(PropInfo.class);
+            PropInfo prop = XObject.getDeclaredAnnotation(f, PropInfo.class);
             if (prop != null) {
                 Object v = null;
                 try {
@@ -132,7 +132,7 @@ public class XObjectWriter {
                 continue;
             }
 
-            ContentInfo cont = f.getDeclaredAnnotation(ContentInfo.class);
+            ContentInfo cont = XObject.getDeclaredAnnotation(f, ContentInfo.class);
             if (cont != null) {
                 Object v = null;
                 try {

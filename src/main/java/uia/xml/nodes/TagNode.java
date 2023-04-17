@@ -37,7 +37,7 @@ public class TagNode implements Node {
         TagListNode inline = null;
         for (Field f : fs) {
             f.setAccessible(true);
-            AttrInfo attr = f.getDeclaredAnnotation(AttrInfo.class);
+            AttrInfo attr = XObject.getDeclaredAnnotation(f, AttrInfo.class);
             if (attr != null) {
                 String name = attr.name();
                 if (name.isEmpty()) {
@@ -48,7 +48,7 @@ public class TagNode implements Node {
                 continue;
             }
 
-            TagInfo tag = f.getDeclaredAnnotation(TagInfo.class);
+            TagInfo tag = XObject.getDeclaredAnnotation(f, TagInfo.class);
             if (tag != null) {
                 String name = tag.name();
                 if (name.isEmpty()) {
@@ -60,7 +60,7 @@ public class TagNode implements Node {
                 continue;
             }
 
-            TagListInfo list = f.getDeclaredAnnotation(TagListInfo.class);
+            TagListInfo list = XObject.getDeclaredAnnotation(f, TagListInfo.class);
             if (list != null) {
                 @SuppressWarnings("unchecked")
                 List<Object> value = (List<Object>) f.getType().newInstance();
@@ -78,7 +78,7 @@ public class TagNode implements Node {
                 continue;
             }
 
-            PropInfo prop = f.getDeclaredAnnotation(PropInfo.class);
+            PropInfo prop = XObject.getDeclaredAnnotation(f, PropInfo.class);
             if (prop != null) {
                 String name = prop.name();
                 if (name.isEmpty()) {
@@ -89,7 +89,7 @@ public class TagNode implements Node {
             }
 
             if (cont == null) {
-                cont = f.getDeclaredAnnotation(ContentInfo.class);
+                cont = XObject.getDeclaredAnnotation(f, ContentInfo.class);
                 if (cont != null) {
                     contF = f;
                 }

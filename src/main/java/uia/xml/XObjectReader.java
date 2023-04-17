@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
@@ -58,15 +57,17 @@ public final class XObjectReader {
 
         // https://rules.sonarsource.com/java/RSPEC-2755
         // prevent xxe
-        xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        //xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        //xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        //xmlInputFactory.setProperty(XMLConstants.XML_DTD_NS_URI, "");
+        //xmlInputFactory.setProperty(XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 
         T t = clz.newInstance();
         XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(fis);
         while (xmlReader.hasNext()) {
             int event = xmlReader.next();
             if (event == XMLEvent.START_ELEMENT) {
-                TagInfo tag = clz.getDeclaredAnnotation(TagInfo.class);
+                TagInfo tag = XObject.getDeclaredAnnotation(clz, TagInfo.class);
                 if (tag != null) {
                     new TagNode(xmlReader.getLocalName(), t).read(xmlReader);
                 }

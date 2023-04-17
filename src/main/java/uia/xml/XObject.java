@@ -1,9 +1,28 @@
 package uia.xml;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 public final class XObject {
+
+    public static <T extends Annotation> T getDeclaredAnnotation(Class<?> clz, Class<T> anClz) {
+        for (Annotation an : clz.getDeclaredAnnotations()) {
+            if (anClz.getName().equals(an.annotationType().getName())) {
+                return (T) an;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends Annotation> T getDeclaredAnnotation(Field f, Class<T> anClz) {
+        for (Annotation an : f.getDeclaredAnnotations()) {
+            if (anClz.getName().equals(an.annotationType().getName())) {
+                return (T) an;
+            }
+        }
+        return null;
+    }
 
     public static Field[] fields(Class<?> clz, Field[] fs1) {
         Field[] fs2 = clz.getDeclaredFields();
