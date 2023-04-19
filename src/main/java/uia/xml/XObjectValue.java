@@ -18,15 +18,26 @@
  *******************************************************************************/
 package uia.xml;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;;
+import java.lang.reflect.Field;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface PropInfo {
+public interface XObjectValue {
 
-    String name() default "";
+    public Object read(Field f, String text);
 
-    boolean cdata() default false;
+    public String write(Object value);
 
-    Class<? extends XObjectValue> parser() default XObjectValue.Simple.class;
+    public static final class Simple implements XObjectValue {
+
+        @Override
+        public Object read(Field f, String text) {
+            return XObjectHelper.read(f, text);
+        }
+
+        @Override
+        public String write(Object value) {
+            return value == null ? null : "" + value;
+
+        }
+
+    }
 }

@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright 2023 UIA
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package uia.xml;
 
 import java.io.OutputStream;
@@ -12,27 +30,27 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class XObjectWriter {
 
-    public void run(Object obj, OutputStream fos) throws XMLStreamException {
+    public static void run(Object obj, OutputStream fos) throws Exception {
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(fos);
         writer.writeStartDocument();
 
-        TagInfo tag = XObject.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
+        TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
 
         run(obj, tag.name(), writer);
         writer.writeEndDocument();
     }
 
-    private void run(Object obj, String tagName, XMLStreamWriter writer) throws XMLStreamException {
+    private static void run(Object obj, String tagName, XMLStreamWriter writer) throws Exception {
         Class<?> clz = obj.getClass();
 
         writer.writeStartElement(tagName);
-        Field[] fs = XObject.fields(clz, new Field[] {});
+        Field[] fs = XObjectHelper.fields(clz, new Field[] {});
         // attributes
         for (Field f : fs) {
             f.setAccessible(true);
-            AttrInfo attr = XObject.getDeclaredAnnotation(f, AttrInfo.class);
+            AttrInfo attr = XObjectHelper.getDeclaredAnnotation(f, AttrInfo.class);
             if (attr == null) {
                 continue;
             }
@@ -52,7 +70,7 @@ public class XObjectWriter {
         // elements
         for (Field f : fs) {
             f.setAccessible(true);
-            TagInfo tag2 = XObject.getDeclaredAnnotation(f, TagInfo.class);
+            TagInfo tag2 = XObjectHelper.getDeclaredAnnotation(f, TagInfo.class);
             if (tag2 != null) {
                 Object v = null;
                 try {
@@ -72,7 +90,7 @@ public class XObjectWriter {
                 continue;
             }
 
-            TagListInfo tag3 = XObject.getDeclaredAnnotation(f, TagListInfo.class);
+            TagListInfo tag3 = XObjectHelper.getDeclaredAnnotation(f, TagListInfo.class);
             if (tag3 != null) {
                 List<?> vs = null;
                 try {
@@ -105,7 +123,7 @@ public class XObjectWriter {
                 continue;
             }
 
-            PropInfo prop = XObject.getDeclaredAnnotation(f, PropInfo.class);
+            PropInfo prop = XObjectHelper.getDeclaredAnnotation(f, PropInfo.class);
             if (prop != null) {
                 Object v = null;
                 try {
@@ -122,17 +140,17 @@ public class XObjectWriter {
                 writer.writeStartElement(name);
                 if (v != null) {
                     if (prop.cdata()) {
-                        writer.writeCData("" + v);
+                        writer.writeCData(prop.parser().newInstance().write(v));
                     }
                     else {
-                        writer.writeCharacters("" + v);
+                        writer.writeCharacters(prop.parser().newInstance().write(v));
                     }
                 }
                 writer.writeEndElement();
                 continue;
             }
 
-            ContentInfo cont = XObject.getDeclaredAnnotation(f, ContentInfo.class);
+            ContentInfo cont = XObjectHelper.getDeclaredAnnotation(f, ContentInfo.class);
             if (cont != null) {
                 Object v = null;
                 try {
@@ -143,6 +161,7 @@ public class XObjectWriter {
                 }
 
                 if (v != null) {
+                    v = cont.parser().newInstance().write(v);
                     if (cont.cdata()) {
                         writer.writeCData("" + v);
                     }

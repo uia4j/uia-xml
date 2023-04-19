@@ -4,30 +4,30 @@
     	<Value1>value11</Value1>
     	<Value2>value12</Value2>
 	    <Elem2 id="abc">
-	    	<Value1>value21</Value1>
+	    	<Value1>Y</Value1>
 	    	<Value2>value22</Value2>
 	    </Elem2>
 	    <Elem3 name="good">123</Elem3>
     </Elem1>
     <Elem2 id="xyz">
-    	<Value1>value31</Value1>
+	    	<Value1>Y</Value1>
     	<Value2>value32</Value2>
     </Elem2>
     <Elem4List>
     	<Elem4 name="a">x</Elem4>
 	    <Elem2 id="123">
-	    	<Value1>value41</Value1>
+	    	<Value1>N</Value1>
 	    	<Value2>value42</Value2>
 	    </Elem2>
     	<Elem4 name="b">y</Elem4>
     </Elem4List>
     <Elem5>
 	    <Elem2 id="51">
-	    	<Value1>value511</Value1>
+	    	<Value1>N</Value1>
 	    	<Value2>value512</Value2>
 	    </Elem2>
 	    <Elem2 id="52">
-	    	<Value1>value521</Value1>
+	    	<Value1>Y</Value1>
 	    	<Value2>value522</Value2>
 	    </Elem2>
     </Elem5>
