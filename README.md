@@ -17,7 +17,8 @@ The annotations used to define XML document includes
 * @TagListElem
 
 ### @TagInfo
-Use to describle an element.
+
+Define an element.
 
 Properties:
 
@@ -33,8 +34,8 @@ Examples:
 public class Doc {}
 ```
 ### @AttrInfo
-Use to describe an attribute.
 
+Define an attribute of an element.
 
 Properties:
 
@@ -103,6 +104,7 @@ public class Doc {
 ```
 
 ### @ContentInfo
+
 Contnet of an element. This will be used when a XML tag has attributes and text.
 
 Properties:
@@ -125,13 +127,14 @@ public class Doc {
 ```
 
 ### @TagListInfo
-list elements.
+
+List elements.
 
 Properties:
 
 * @TagListInfo
     * name - the tag name.
-    * elems - definitions of elements in the list. Array of @TagListElem.
+    * elems - definition of elements in the list. Array of @TagListElem.
     * inline - if tag exists or not.
 
 * @TagListElem
@@ -177,4 +180,43 @@ examples:
 
     }
 
+2. list with mulitple types.
+    ```xml
+    <Zoo>
+        <Animals>
+            <Tiger id="0001" />
+            <Lion id="0002" />
+            <Lion id="0003" />
+            <Tiger id="0004" />
+            <Lion id="0005" />
+        </Animals>
+    </Zoo>
+    ```
+    ```java
+    @TagInfo(name = "Zoo")
+    public class Zoo {
 
+        @TagListInfo(
+            name = "Animals", 
+            elems = { 
+                @TagListElem(name = "Tiger", type = Tiger.class) 
+                @TagListElem(name = "Lion", type = Lion.class) 
+            })
+        private ArrayList<Animal> animals;
+
+    }
+
+
+## Copyright and License
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
