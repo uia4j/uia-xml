@@ -45,20 +45,7 @@ public class TagListNode implements Node {
         this.objs = objs;
         this.mapping = new TreeMap<String, Class<?>>();
         for (TagListElem elem : info.elems()) {
-            for (Annotation an : elem.type().getDeclaredAnnotations()) {
-                if (an instanceof TagInfo) {
-                    TagInfo tag = (TagInfo) an;
-                    this.mapping.put(tag.name(), elem.type());
-                }
-                else if (an instanceof TagListInfo) {
-                    TagListInfo list = (TagListInfo) an;
-                    this.mapping.put(list.name(), elem.type());
-                }
-                else if (an instanceof PropInfo) {
-                    PropInfo prop = (PropInfo) an;
-                    this.mapping.put(prop.name(), elem.type());
-                }
-            }
+            this.mapping.put(elem.name(), elem.type());
         }
     }
 

@@ -14,7 +14,8 @@ public class Program {
             elems = {
                     @TagListElem(name = "Picture", type = Picture.class),
                     @TagListElem(name = "Text", type = Text.class),
-                    @TagListElem(name = "Calendar", type = Calendar.class) })
+                    @TagListElem(name = "Calendar", type = Calendar.class),
+                    @TagListElem(name = "File", type = File.class) })
     public ArrayList<Panel> panels;
 
     public Program() {

@@ -2,7 +2,7 @@ package uia.xml.model2;
 
 import uia.xml.TagInfo;
 
-@TagInfo(name = "Text")
+@TagInfo
 public class Text extends Panel {
 
 }

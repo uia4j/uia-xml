@@ -11,18 +11,18 @@ public class XObjectWriterTest {
     @Test
     public void testCase1() throws Exception {
         Company c = XObjectReader.run(Company.class, XObjectWriterTest.class.getResourceAsStream("case1.xml"));
-        XObjectWriter.run(c, System.out);
+        System.out.println(XObjectWriter.run(c, "utf-8"));
     }
 
     @Test
     public void testCase2() throws Exception {
         Program p = XObjectReader.run(Program.class, XObjectWriterTest.class.getResourceAsStream("case2.xml"));
-        XObjectWriter.run(p, System.out);
+        System.out.println(XObjectWriter.run(p, "utf-8"));
     }
 
     @Test
     public void testCase3() throws Exception {
         Simple s = XObjectReader.run(Simple.class, XObjectWriterTest.class.getResourceAsStream("case3.xml"));
-        XObjectWriter.run(s, System.out);
+        System.out.println(XObjectWriter.run(s, "utf-8"));
     }
 }

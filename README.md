@@ -5,7 +5,7 @@ uia-xml
 
 Map XML document to objects using StAX API.
 
-## Documentation
+## Annotations
 
 The annotations used to define XML document includes
 
@@ -35,7 +35,17 @@ public class Doc {}
 ```
 ### @AttrInfo
 
-Define an attribute of an element.
+Define an attribute of an element. Value type supports
+
+* long
+* int
+* short
+* byte
+* boolean
+* double
+* float
+* String
+* BigDecimal
 
 Properties:
 
@@ -60,13 +70,13 @@ public class Doc {
 
 ### @PropInfo
 
-Simple element, supporting type includes
+Simple element, Value type supports
 
 * long
 * int
 * short
 * byte
-* bool
+* boolean
 * double
 * float
 * String
@@ -105,7 +115,17 @@ public class Doc {
 
 ### @ContentInfo
 
-Contnet of an element. This will be used when a XML tag has attributes and text.
+Contnet of an element. This will be used when a XML tag has attributes and text. Value type supports
+
+* long
+* int
+* short
+* byte
+* boolean
+* double
+* float
+* String
+* BigDecimal
 
 Properties:
 
@@ -206,6 +226,32 @@ examples:
 
     }
 
+## Value Parser
+
+`@PropInfo` and `@Content` support parser configurtion. The parser class needs to implement `uia.xml.XObjectValue` interface.
+
+For example, the `result` property stores the value with `boolean` type, and the XML content is `Y` or `N`. 
+
+```xml
+<result>Y</result>
+```
+```java
+@PropInfo(parser = BooleanValue.class)
+private boolean result;
+```
+```java
+public class BooleanValue implements XObjectValue {
+
+    public Object read(Field f, String text) {
+        return "Y".equals(text);
+    }
+
+    public String write(Object value) {
+        boolean b = (Boolean)value;
+        return b ? "Y" : "N";
+    }
+}
+```
 
 ## Copyright and License
 

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package uia.xml;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -29,6 +30,22 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class XObjectWriter {
+
+    public static String run(Object obj, String charsetName) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+
+        XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(baos);
+        writer.writeStartDocument();
+
+        TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
+
+        run(obj, tag.name(), writer);
+        writer.writeEndDocument();
+
+        return baos.toString(charsetName);
+    }
 
     public static void run(Object obj, OutputStream fos) throws Exception {
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
@@ -134,7 +151,7 @@ public class XObjectWriter {
                 }
 
                 String name = prop.name();
-                if (name == null) {
+                if (name.isEmpty()) {
                     name = f.getName();
                 }
                 writer.writeStartElement(name);
