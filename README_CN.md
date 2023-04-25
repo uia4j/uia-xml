@@ -1,15 +1,16 @@
 uia-xml
 ===
 
-## Description
+## 说明
 
-Map XML document to objects using StAX API.
+采用 StAX API 进行 XML 与 Object 之间的读写转换。
 
-[中文](README_CN.md)
+[English](README.md)
 
-## Annotations
 
-The annotations used to define XML document includes
+## 标示
+
+可用来定义 XML 元素的标示（Annotation）包括：
 
 * @TagInfo
 * @AttrInfo
@@ -20,13 +21,13 @@ The annotations used to define XML document includes
 
 ### @TagInfo
 
-Define an element.
+定义一个 XML 元素。
 
-Properties:
+参数:
 
-* name - the tag name.
+* name - 元素名称，可缺省。
 
-Examples:
+范例：
 
 ```xml
 <Book />
@@ -38,7 +39,7 @@ public class Book {}
 
 ### @AttrInfo
 
-Define an attribute of an element. Value type supports
+定义元素的属性，可用得资料型别包括：
 
 * long
 * int
@@ -50,11 +51,11 @@ Define an attribute of an element. Value type supports
 * String
 * BigDecimal
 
-Properties:
+参数：
 
-* name - the attribute name.
+* name - 属性名称，可缺省。
 
-Examples:
+范例：
 
 ```xml
 <Book id="abc" name="API Toturial" />
@@ -73,7 +74,7 @@ public class Book {
 
 ### @PropInfo
 
-Simple element, Value type supports
+直接使用原始资料型别的元素，可用得资料型别包括：
 
 * long
 * int
@@ -85,12 +86,12 @@ Simple element, Value type supports
 * String
 * BigDecimal
 
-Properties:
+参数：
 
-* name - the property name.
-* parser - the value parser.
+* name - 元素名称，可缺省。
+* parser - 内容转换类别，可缺省。
 
-Examples:
+范例：
 
 ```xml
 <Book id="abc" name="API Toturial" />
@@ -122,7 +123,7 @@ public class Book {
 
 ### @ContentInfo
 
-Contnet of an element. This will be used when a XML tag has attributes and text. Value type supports
+元素的内容。此标记使用在同时具有属性与内容的元素上。可用的资料型别包括：
 
 * long
 * int
@@ -134,11 +135,11 @@ Contnet of an element. This will be used when a XML tag has attributes and text.
 * String
 * BigDecimal
 
-Properties:
+参数：
 
-* parser - the value parser.
+* parser - 内容转换类别，可缺省。
 
-Exammples:
+范例：
 
 ```xml
 <Book id="abc" name="API Toturial" />
@@ -184,22 +185,22 @@ public class Release {
 
 ### @TagListInfo
 
-List elements.
+定义集合类型的元素。
 
-Properties:
+参数：
 
 * @TagListInfo
-    * name - the tag name.
-    * elems - definition of elements in the list. Array of @TagListElem.
-    * inline - if tag exists or not.
+    * name - 元素名称，可缺省。
+    * elems - 定义集合内元素的信息，以 @TagListElem 阵列记录。
+    * inline - 此元素是否为 inline 形式。true 表示元素名称不存在于 XML 中，可缺省。
 
 * @TagListElem
-    * name - the tag name.
-    * type - the class.
+    * name - 元素名称。
+    * type - 对应类别。
 
-examples:
+范例：
 
-1. inline style
+1. inline 格式
     ```xml
     <Lib>
         <Book />
@@ -215,9 +216,12 @@ examples:
         private ArrayList<Book> values;
 
     }
+
+    @TagInfo
+    public class Book {}
     ```
 
-2. NOT inline style
+2. 非 inline 格式
     ```xml
     <Lib>
         <Books>
@@ -236,7 +240,7 @@ examples:
 
     }
 
-3. list with mulitple types.
+3. 集合中的元素名称不相同。
     ```xml
     <Zoo>
         <Animals>
@@ -262,11 +266,13 @@ examples:
 
     }
 
-## Value Parser
+## 内容转换
 
-`@PropInfo` and `@Content` support parser configurtion. The parser class needs to implement `uia.xml.XObjectValue` interface.
+`@PropInfo` 和 `@Content` 支援内容转换配置。转换配置的类需要实作 `uia.xml.XObjectValue` 界面。
 
-For example, the `result` property stores the value with `boolean` type, and the XML content is `Y` or `N`. 
+范例：
+
+元素 `result` 在类中定义为 `boolean` 型别，而在 XML 内用 `Y` 或 `N` 保存。 
 
 ```xml
 <result>Y</result>
@@ -289,7 +295,7 @@ public class BooleanValue implements XObjectValue {
 }
 ```
 
-## Copyright and License
+## 版权与授权
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
