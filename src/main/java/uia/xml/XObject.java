@@ -43,4 +43,8 @@ public final class XObject {
     public void write(Object obj, OutputStream fos) throws Exception {
         XObjectWriter.run(obj, fos);
     }
+
+    public String write(Object obj, String charsetName) throws Exception {
+        return XObjectWriter.run(obj, charsetName);
+    }
 }
