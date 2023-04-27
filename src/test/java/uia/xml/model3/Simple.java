@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import uia.xml.TagInfo;
 import uia.xml.TagListElem;
 import uia.xml.TagListInfo;
+import uia.xml.XmlInfo;
 
 @TagInfo(name = "Simple")
 public class Simple {
@@ -23,16 +24,11 @@ public class Simple {
             })
     public ArrayList<Object> elem4s;
 
-    @TagListInfo(
-            name = "Elem5",
-            elems = {
-                    @TagListElem(name = "Elem2", type = Elem2.class),
-            })
-    public ArrayList<Elem2> elem5;
+    @XmlInfo(name = "Elem5")
+    public String elem5;
 
     public Simple() {
         this.elem4s = new ArrayList<Object>();
-        this.elem5 = new ArrayList<Elem2>();
     }
 
 }

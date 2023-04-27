@@ -29,5 +29,6 @@ public class XObjectReaderTest {
         InputStream is = XObjectReaderTest.class.getResourceAsStream("case3.xml");
         Simple obj = XObjectReader.run(Simple.class, is);
         System.out.println(obj);
+        System.out.println(obj.elem5);
     }
 }

@@ -77,7 +77,8 @@ public class XObjectWriter {
                 name = f.getName();
             }
             try {
-                writer.writeAttribute(name, "" + f.get(obj));
+                String text = attr.parser().newInstance().write(f.get(obj));
+                writer.writeAttribute(name, text);
             }
             catch (Exception ex) {
                 throw new XMLStreamException(ex);
@@ -186,6 +187,28 @@ public class XObjectWriter {
                         writer.writeCharacters("" + v);
                     }
                 }
+                continue;
+            }
+
+            XmlInfo xml = XObjectHelper.getDeclaredAnnotation(f, XmlInfo.class);
+            if (xml != null) {
+                Object v = null;
+                try {
+                    v = f.get(obj);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
+
+                String name = xml.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                writer.writeStartElement(name);
+                if (v != null) {
+                    writer.writeCData("" + v);
+                }
+                writer.writeEndElement();
             }
         }
 

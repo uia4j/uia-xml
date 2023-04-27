@@ -22,9 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AttrInfo {
+public @interface XmlInfo {
 
     String name() default "";
-
-    Class<? extends XObjectValue> parser() default XObjectValue.Simple.class;
 }

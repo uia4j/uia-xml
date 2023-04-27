@@ -22,9 +22,9 @@ import java.lang.reflect.Field;
 
 public interface XObjectValue {
 
-    public Object read(Field f, String text);
+    public Object read(Field f, String text) throws Exception;
 
-    public String write(Object value);
+    public String write(Object value) throws Exception;
 
     public static final class Simple implements XObjectValue {
 
@@ -35,9 +35,8 @@ public interface XObjectValue {
 
         @Override
         public String write(Object value) {
-            return value == null ? null : "" + value;
+            return value == null ? "" : "" + value;
 
         }
-
     }
 }

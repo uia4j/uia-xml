@@ -33,6 +33,7 @@ import uia.xml.TagInfo;
 import uia.xml.TagListInfo;
 import uia.xml.XObjectHelper;
 import uia.xml.XObjectValue;
+import uia.xml.XmlInfo;
 
 public class TagNode implements Node {
 
@@ -63,7 +64,8 @@ public class TagNode implements Node {
                     name = f.getName();
                 }
                 String text = xmlReader.getAttributeValue(null, name);
-                f.set(this.obj, XObjectHelper.read(f, text));
+                Object value = attr.parser().newInstance().read(f, text);
+                f.set(this.obj, value);
                 continue;
             }
 
@@ -104,6 +106,16 @@ public class TagNode implements Node {
                     name = f.getName();
                 }
                 subs.put(name, new PropNode(name, this.obj, f, prop.parser()));
+                continue;
+            }
+
+            XmlInfo xml = XObjectHelper.getDeclaredAnnotation(f, XmlInfo.class);
+            if (xml != null) {
+                String name = xml.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                subs.put(name, new XmlNode(name, this.obj, f));
                 continue;
             }
 
