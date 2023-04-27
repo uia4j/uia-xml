@@ -17,6 +17,7 @@ The annotations used to define XML document includes
 * @ContentInfo
 * @TagListInfo
 * @TagListElem
+* @XmlInfo
 
 ### @TagInfo
 
@@ -24,7 +25,7 @@ Define an element.
 
 Properties:
 
-* name - the tag name.
+* name - the element name.
 
 Examples:
 
@@ -53,6 +54,7 @@ Define an attribute of an element. Value type supports
 Properties:
 
 * name - the attribute name.
+* parser - the value parser.
 
 Examples:
 
@@ -87,8 +89,9 @@ Simple element, Value type supports
 
 Properties:
 
-* name - the property name.
+* name - the element name.
 * parser - the value parser.
+* cdata - if the content is CDATA or not.
 
 Examples:
 
@@ -122,7 +125,7 @@ public class Book {
 
 ### @ContentInfo
 
-Contnet of an element. This will be used when a XML tag has attributes and text. Value type supports
+Contnet of an element. This will be used when a XML element has attributes and text. Value type supports
 
 * long
 * int
@@ -137,6 +140,7 @@ Contnet of an element. This will be used when a XML tag has attributes and text.
 Properties:
 
 * parser - the value parser.
+* cdata - if the content is CDATA or not.
 
 Exammples:
 
@@ -182,19 +186,54 @@ public class Release {
 }
 ```
 
+### @XmlInfo
+
+The content is XML fommat.
+
+Properties:
+
+* name - the element name.
+
+Exammples:
+
+```xml
+<Lib>
+    <Books>
+        <Book id="abc" name="API Toturial" />
+            <author>Kyle</author>
+            <price>100</price>
+            <hardback>true</hardback>
+            <release time="2022-10-26">Good</release>
+        </Book>
+    </Books>
+```
+```java
+@TagInfo(name = "Lib")
+public class Lib {
+
+    @XmlInfo(name = "Books")
+    private String books;
+}
+```
+
+After reading XML document, the text stored in the `books` will be
+```xml
+<Book id="abc" name="API Toturial" /><author>Kyle</author><price>100</price><hardback>true</hardback><release time="2022-10-26">Good</release></Book>
+```
+
 ### @TagListInfo
 
-List elements.
+List element.
 
 Properties:
 
 * @TagListInfo
-    * name - the tag name.
-    * elems - definition of elements in the list. Array of @TagListElem.
-    * inline - if tag exists or not.
+    * name - the element name.
+    * elems - definition of sub-elements in the list. Array of @TagListElem.
+    * inline - if element exists or not.
 
 * @TagListElem
-    * name - the tag name.
+    * name - the element name.
     * type - the class.
 
 examples:
@@ -264,9 +303,9 @@ examples:
 
 ## Value Parser
 
-`@PropInfo` and `@Content` support parser configurtion. The parser class needs to implement `uia.xml.XObjectValue` interface.
+`@AttrInfo`, `@PropInfo` and `@Content` support parser configurtion. The parser class needs to implement `uia.xml.XObjectValue` interface.
 
-For example, the `result` property stores the value with `boolean` type, and the XML content is `Y` or `N`. 
+For example, the type of `result` element in the class is `boolean`, and the XML content is `Y` or `N`. 
 
 ```xml
 <result>Y</result>

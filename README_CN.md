@@ -54,6 +54,7 @@ public class Book {}
 参数：
 
 * name - 属性名称，可缺省。
+* parser - 内容转换类别，可缺省。
 
 范例：
 
@@ -90,6 +91,7 @@ public class Book {
 
 * name - 元素名称，可缺省。
 * parser - 内容转换类别，可缺省。
+* cdata - 内容是否为 CDATA 格式。
 
 范例：
 
@@ -138,6 +140,7 @@ public class Book {
 参数：
 
 * parser - 内容转换类别，可缺省。
+* cdata - 内容是否为 CDATA 格式。
 
 范例：
 
@@ -183,6 +186,41 @@ public class Release {
 }
 ```
 
+### @XmlInfo
+
+定义内容为 XML 文字信息的元素。
+
+Properties:
+
+* name - 元素名称，可缺省。
+
+范例：
+
+```xml
+<Lib>
+    <Books>
+        <Book id="abc" name="API Toturial" />
+            <author>Kyle</author>
+            <price>100</price>
+            <hardback>true</hardback>
+            <release time="2022-10-26">Good</release>
+        </Book>
+    </Books>
+```
+```java
+@TagInfo(name = "Lib")
+public class Lib {
+
+    @XmlInfo(name = "Books")
+    private String books;
+}
+```
+
+解析 XML 文件后，保存在 `books` 内的文字信息将是
+```xml
+<Book id="abc" name="API Toturial" /><author>Kyle</author><price>100</price><hardback>true</hardback><release time="2022-10-26">Good</release></Book>
+```
+
 ### @TagListInfo
 
 定义集合类型的元素。
@@ -192,7 +230,7 @@ public class Release {
 * @TagListInfo
     * name - 元素名称，可缺省。
     * elems - 定义集合内元素的信息，以 @TagListElem 阵列记录。
-    * inline - 此元素是否为 inline 形式。true 表示元素名称不存在于 XML 中，可缺省。
+    * inline - 此元素是否为 inline 格式。true 表示元素名称不存在于 XML 中，可缺省。
 
 * @TagListElem
     * name - 元素名称。
@@ -268,7 +306,7 @@ public class Release {
 
 ## 内容转换
 
-`@PropInfo` 和 `@Content` 支援内容转换配置。转换配置的类需要实作 `uia.xml.XObjectValue` 界面。
+`@AttrInfo` 、 `@PropInfo` 和 `@Content` 支援内容转换配置。转换配置的类需要实作 `uia.xml.XObjectValue` 界面。
 
 范例：
 
