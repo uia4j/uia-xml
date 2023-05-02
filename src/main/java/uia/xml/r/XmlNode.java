@@ -16,16 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uia.xml.nodes;
+package uia.xml.r;
 
 import java.lang.reflect.Field;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
-import uia.xml.XObjectValue;
-
-public class PropNode implements Node {
+/**
+ * Node for XmlInfo.
+ *
+ * @author ks026400
+ *
+ */
+class XmlNode implements Node {
 
     private final String name;
 
@@ -33,35 +38,58 @@ public class PropNode implements Node {
 
     private final Field f;
 
-    private Class<? extends XObjectValue> parser;
-
-    public PropNode(String name) {
+    XmlNode(String name) {
         this.name = name;
         this.owner = null;
         this.f = null;
-        this.parser = XObjectValue.Simple.class;
     }
 
-    public PropNode(String name, Object owner, Field f, Class<? extends XObjectValue> parser) {
+    XmlNode(String name, Object owner, Field f) {
         this.name = name;
         this.owner = owner;
         this.f = f;
-        this.parser = parser;
     }
 
     @Override
     public Object read(XMLStreamReader xmlReader) throws Exception {
-        Object value = null;
+        String value = null;
+        int d = 1;
+        StringBuilder b = new StringBuilder();
+        String n = null;
         while (xmlReader.hasNext()) {
             int event = xmlReader.next();
-            if (event == XMLEvent.END_ELEMENT) {
-                break;
+            if (event == XMLEvent.START_ELEMENT) {
+                n = xmlReader.getLocalName();
+                if (this.name.equals(n)) {
+                    d++;
+                }
+                b.append("<").append(n);
+                for (int a = 0; a < xmlReader.getAttributeCount(); a++) {
+                    QName an = xmlReader.getAttributeName(a);
+                    String av = xmlReader.getAttributeValue(a);
+                    b.append(" ").append(an).append("=\"").append(av).append("\"");
+                }
+                b.append(">");
             }
+            else if (event == XMLEvent.END_ELEMENT) {
+                n = xmlReader.getLocalName();
+                if (!this.name.equals(n)) {
+                    b.append("</").append(n).append(">");
+                    continue;
+                }
 
-            value = this.parser.newInstance().read(this.f, xmlReader.getText());
-            if (this.owner != null) {
-                this.f.set(this.owner, value);
+                d--;
+                if (d == 0) {
+                    break;
+                }
             }
+            else if (event == XMLEvent.CHARACTERS || event == XMLEvent.CDATA) {
+                b.append(xmlReader.getText().trim());
+            }
+        }
+        value = b.toString();
+        if (this.owner != null) {
+            this.f.set(this.owner, value);
         }
         return value;
     }

@@ -21,12 +21,33 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define an element with simple content.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PropInfo {
 
+    /**
+     * The element name. Default is name of annotated variable.
+     *
+     * @return The element name.
+     */
     String name() default "";
 
+    /**
+     * If content is CDATA or not. Default is false.
+     *
+     * @return True if content is CDATA.
+     */
     boolean cdata() default false;
 
+    /**
+     * The value parser.
+     *
+     * @return The value parser.
+     */
     Class<? extends XObjectValue> parser() default XObjectValue.Simple.class;
 }

@@ -29,8 +29,22 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * Convert an object to the XML.
+ *
+ * @author ks026400
+ *
+ */
 public class XObjectWriter {
 
+    /**
+     * Run.
+     *
+     * @param obj The object.
+     * @param charsetName The XML charset.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
     public static String run(Object obj, String charsetName) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -44,13 +58,20 @@ public class XObjectWriter {
         run(obj, tag.name(), writer);
         writer.writeEndDocument();
 
-        return baos.toString(charsetName);
+        return baos.toString(charsetName).replace("></", ">\n</");
     }
 
-    public static void run(Object obj, OutputStream fos) throws Exception {
+    /**
+     * Run.
+     *
+     * @param obj The object.
+     * @param os The XML output stream.
+     * @throws Exception Failed to convert.
+     */
+    public static void run(Object obj, OutputStream os) throws Exception {
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
 
-        XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(fos);
+        XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(os);
         writer.writeStartDocument();
 
         TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
@@ -62,8 +83,9 @@ public class XObjectWriter {
     private static void run(Object obj, String tagName, XMLStreamWriter writer) throws Exception {
         Class<?> clz = obj.getClass();
 
+        writer.writeCharacters("\n");
         writer.writeStartElement(tagName);
-        Field[] fs = XObjectHelper.fields(clz, new Field[] {});
+        Field[] fs = XObjectHelper.fields(clz);
         // attributes
         for (Field f : fs) {
             f.setAccessible(true);
@@ -102,6 +124,7 @@ public class XObjectWriter {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
+                writer.writeCharacters("\n");
                 writer.writeStartElement(name);
                 run(v, name, writer);
                 writer.writeEndElement();
@@ -123,6 +146,7 @@ public class XObjectWriter {
                     if (name.isEmpty()) {
                         name = f.getName();
                     }
+                    writer.writeCharacters("\n");
                     writer.writeStartElement(name);
                 }
                 Map<String, TagListElem> mapping = new TreeMap<String, TagListElem>();
@@ -155,6 +179,7 @@ public class XObjectWriter {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
+                writer.writeCharacters("\n");
                 writer.writeStartElement(name);
                 if (v != null) {
                     if (prop.cdata()) {
@@ -204,6 +229,7 @@ public class XObjectWriter {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
+                writer.writeCharacters("\n");
                 writer.writeStartElement(name);
                 if (v != null) {
                     writer.writeCData("" + v);

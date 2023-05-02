@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uia.xml.nodes;
+package uia.xml.r;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -35,12 +35,24 @@ import uia.xml.XObjectHelper;
 import uia.xml.XObjectValue;
 import uia.xml.XmlInfo;
 
+/**
+ * Node for TagInfo.
+ *
+ * @author ks026400
+ *
+ */
 public class TagNode implements Node {
 
     private final String name;
 
     private final Object obj;
 
+    /**
+     * The constructor.
+     *
+     * @param name The element name.
+     * @param obj The value for this element.
+     */
     public TagNode(String name, Object obj) {
         this.name = name;
         this.obj = obj;
@@ -49,7 +61,7 @@ public class TagNode implements Node {
     @Override
     public Object read(XMLStreamReader xmlReader) throws Exception {
         Class<?> clz = this.obj.getClass();
-        Field[] fs = XObjectHelper.fields(clz, new Field[] {});
+        Field[] fs = XObjectHelper.fields(clz);
 
         Map<String, Node> subs = new TreeMap<String, Node>();
         ContentInfo cont = null;

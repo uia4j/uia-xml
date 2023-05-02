@@ -21,8 +21,19 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define an element.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagInfo {
 
+    /**
+     * The element name. Default is name of annotated variable.
+     *
+     * @return The element name.
+     */
     String name() default "";
 }

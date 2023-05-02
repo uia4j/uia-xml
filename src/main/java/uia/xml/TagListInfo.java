@@ -21,12 +21,33 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define an element with multiple sub-elements.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagListInfo {
 
+    /**
+     * The element name. Default is name of annotated variable.
+     *
+     * @return The element name.
+     */
     String name() default "";
 
+    /**
+     * If the element is inline or not.
+     *
+     * @return True if the element is inline type.
+     */
     boolean inline() default false;
 
+    /**
+     * The definition of elements in this list.
+     *
+     * @return The definition of elements in this list.
+     */
     TagListElem[] elems();
 }

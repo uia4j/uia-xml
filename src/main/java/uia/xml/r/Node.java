@@ -16,12 +16,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uia.xml.nodes;
+package uia.xml.r;
 
 import javax.xml.stream.XMLStreamReader;
 
+/**
+ * The node interface.
+ *
+ * @author ks026400
+ *
+ */
 public interface Node {
 
+    /**
+     * Read.
+     *
+     * @param xmlReader The XML reader.
+     * @return The object.
+     * @throws Exception Failed.
+     */
     public Object read(XMLStreamReader xmlReader) throws Exception;
 
 }

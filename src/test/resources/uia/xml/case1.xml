@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Company>
     <staff id="1001">
-        <name>mkyong</name>
-        <role>support</role>
+        <name>Kyle</name>
+        <role>engineer</role>
         <salary currency="USD">5000</salary>
-        <bio><![CDATA[HTML tag <code>testing</code>]]></bio>
+        <bio><![CDATA[HTML tag <code>integration</code>]]></bio>
     </staff>
     <staff id="1002">
-        <name>yflow</name>
-        <role>admin</role>
+        <name>Avril</name>
+        <role>support</role>
         <salary currency="EUR">8000</salary>
-        <bio><![CDATA[a & b]]></bio>
+        <bio><![CDATA[b & q]]></bio>
     </staff>
 </Company>

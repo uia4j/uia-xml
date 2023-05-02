@@ -27,10 +27,24 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
-import uia.xml.nodes.TagNode;
+import uia.xml.r.TagNode;
 
+/**
+ * Convert the XML to an object.
+ *
+ * @author ks026400
+ *
+ */
 public final class XObjectReader {
 
+    /**
+     * Run.
+     *
+     * @param clz The class type.
+     * @param file The XML file.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
     public static <T> T run(Class<T> clz, File file) throws Exception {
         FileInputStream fis = null;
         try {
@@ -44,6 +58,14 @@ public final class XObjectReader {
         }
     }
 
+    /**
+     * Run.
+     *
+     * @param clz The class type.
+     * @param xmlContent The XML string.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
     public static <T> T run(Class<T> clz, String xmlContent) throws Exception {
         InputStream bais = null;
         try {
@@ -57,6 +79,15 @@ public final class XObjectReader {
         }
     }
 
+    /**
+     * Run.
+     *
+     * @param clz The class type.
+     * @param xmlContent The XML string.
+     * @param charsetName The charset.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
     public static <T> T run(Class<T> clz, String xmlContent, String charsetName) throws Exception {
         ByteArrayInputStream bais = null;
         try {
@@ -70,7 +101,15 @@ public final class XObjectReader {
         }
     }
 
-    public static <T> T run(Class<T> clz, InputStream fis) throws Exception {
+    /**
+     * Run.
+     *
+     * @param clz The class type.
+     * @param is The XML input stream.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
+    public static <T> T run(Class<T> clz, InputStream is) throws Exception {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 
         // https://rules.sonarsource.com/java/RSPEC-2755
@@ -81,7 +120,7 @@ public final class XObjectReader {
         //xmlInputFactory.setProperty(XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 
         T t = clz.newInstance();
-        XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(fis);
+        XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(is);
         while (xmlReader.hasNext()) {
             int event = xmlReader.next();
             if (event == XMLEvent.START_ELEMENT) {

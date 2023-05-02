@@ -16,15 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uia.xml.nodes;
+package uia.xml.r;
 
 import java.lang.reflect.Field;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
-public class XmlNode implements Node {
+import uia.xml.XObjectValue;
+
+/**
+ * Node for PropInfo.
+ *
+ * @author ks026400
+ *
+ */
+class PropNode implements Node {
 
     private final String name;
 
@@ -32,58 +39,35 @@ public class XmlNode implements Node {
 
     private final Field f;
 
-    public XmlNode(String name) {
+    private Class<? extends XObjectValue> parser;
+
+    PropNode(String name) {
         this.name = name;
         this.owner = null;
         this.f = null;
+        this.parser = XObjectValue.Simple.class;
     }
 
-    public XmlNode(String name, Object owner, Field f) {
+    PropNode(String name, Object owner, Field f, Class<? extends XObjectValue> parser) {
         this.name = name;
         this.owner = owner;
         this.f = f;
+        this.parser = parser;
     }
 
     @Override
     public Object read(XMLStreamReader xmlReader) throws Exception {
-        String value = null;
-        int d = 1;
-        StringBuilder b = new StringBuilder();
-        String n = null;
+        Object value = null;
         while (xmlReader.hasNext()) {
             int event = xmlReader.next();
-            if (event == XMLEvent.START_ELEMENT) {
-                n = xmlReader.getLocalName();
-                if (this.name.equals(n)) {
-                    d++;
-                }
-                b.append("<").append(n);
-                for (int a = 0; a < xmlReader.getAttributeCount(); a++) {
-                    QName an = xmlReader.getAttributeName(a);
-                    String av = xmlReader.getAttributeValue(a);
-                    b.append(" ").append(an).append("=\"").append(av).append("\"");
-                }
-                b.append(">");
+            if (event == XMLEvent.END_ELEMENT) {
+                break;
             }
-            else if (event == XMLEvent.END_ELEMENT) {
-                n = xmlReader.getLocalName();
-                if (!this.name.equals(n)) {
-                    b.append("</").append(n).append(">");
-                    continue;
-                }
 
-                d--;
-                if (d == 0) {
-                    break;
-                }
+            value = this.parser.newInstance().read(this.f, xmlReader.getText());
+            if (this.owner != null) {
+                this.f.set(this.owner, value);
             }
-            else if (event == XMLEvent.CHARACTERS || event == XMLEvent.CDATA) {
-                b.append(xmlReader.getText().trim());
-            }
-        }
-        value = b.toString();
-        if (this.owner != null) {
-            this.f.set(this.owner, value);
         }
         return value;
     }

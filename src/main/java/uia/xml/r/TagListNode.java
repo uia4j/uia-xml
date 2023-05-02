@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uia.xml.nodes;
+package uia.xml.r;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -32,7 +32,13 @@ import uia.xml.TagInfo;
 import uia.xml.TagListElem;
 import uia.xml.TagListInfo;
 
-public class TagListNode implements Node {
+/**
+ * Node for TagListInfo.
+ *
+ * @author ks026400
+ *
+ */
+class TagListNode implements Node {
 
     private final String name;
 
@@ -40,7 +46,7 @@ public class TagListNode implements Node {
 
     private Map<String, Class<?>> mapping;
 
-    public TagListNode(String name, List<Object> objs, TagListInfo info) {
+    TagListNode(String name, List<Object> objs, TagListInfo info) {
         this.name = name;
         this.objs = objs;
         this.mapping = new TreeMap<String, Class<?>>();

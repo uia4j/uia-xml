@@ -21,10 +21,26 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define the attribute of a element.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AttrInfo {
 
+    /**
+     * The attribute name. Default is name of annotated variable.
+     *
+     * @return The attribute name.
+     */
     String name() default "";
 
+    /**
+     * The value parser(optional).
+     *
+     * @return The value parser.
+     */
     Class<? extends XObjectValue> parser() default XObjectValue.Simple.class;
 }

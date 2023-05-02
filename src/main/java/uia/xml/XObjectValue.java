@@ -20,12 +20,38 @@ package uia.xml;
 
 import java.lang.reflect.Field;
 
+/**
+ * The value parser interface.
+ *
+ * @author ks026400
+ *
+ */
 public interface XObjectValue {
 
+    /**
+     * Convert a text to an object.
+     *
+     * @param f The field definition.
+     * @param text The text.
+     * @return Converted result.
+     * @throws Exception Failed to convert.
+     */
     public Object read(Field f, String text) throws Exception;
 
+    /**
+     * Convert object to a string.
+     * @param value The value.
+     * @return Converted result.
+     * @throws Exception Failed to convert.
+     */
     public String write(Object value) throws Exception;
 
+    /**
+     * Default implementation of the value parser
+     *
+     * @author ks026400
+     *
+     */
     public static final class Simple implements XObjectValue {
 
         @Override

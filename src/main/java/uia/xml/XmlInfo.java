@@ -21,6 +21,12 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define XML-style content of an element.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XmlInfo {
 

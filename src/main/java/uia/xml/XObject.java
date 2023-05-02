@@ -22,29 +22,83 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * The XML Object helper methods.
+ *
+ * @author ks026400
+ *
+ */
 public final class XObject {
 
+    /**
+     * Read XML from a file.
+     *
+     * @param clz The XML object class type.
+     * @param file The XML file.
+     * @return The mapping result.
+     * @throws Exception Failed to read.
+     */
     public static <T> T read(Class<T> clz, File file) throws Exception {
         return XObjectReader.run(clz, file);
     }
 
+    /**
+     * Read XML from a string.
+     *
+     * @param clz The XML object class type.
+     * @param xmlContent The XML string.
+     * @return The mapping result.
+     * @throws Exception Failed to read.
+     */
     public static <T> T read(Class<T> clz, String xmlContent) throws Exception {
         return XObjectReader.run(clz, xmlContent);
     }
 
+    /**
+     * Read XML from a string.
+     *
+     * @param clz The XML object class type.
+     * @param xmlContent The XML string.
+     * @param charsetName The charset.
+     * @return The mapping result.
+     * @throws Exception Failed to read.
+     */
     public static <T> T read(Class<T> clz, String xmlContent, String charsetName) throws Exception {
         return XObjectReader.run(clz, xmlContent, charsetName);
     }
 
-    public static <T> T read(Class<T> clz, InputStream fis) throws Exception {
-        return XObjectReader.run(clz, fis);
+    /**
+     * Read XML from an input stream.
+     *
+     * @param clz The XML object class type.
+     * @param is An input stream.
+     * @return The mapping result.
+     * @throws Exception Failed to read.
+     */
+    public static <T> T read(Class<T> clz, InputStream is) throws Exception {
+        return XObjectReader.run(clz, is);
     }
 
-    public void write(Object obj, OutputStream fos) throws Exception {
-        XObjectWriter.run(obj, fos);
+    /**
+     * Write an XML from a object.
+     *
+     * @param obj The object.
+     * @param os A output stream.
+     * @throws Exception Failed to write an XML.
+     */
+    public static void write(Object obj, OutputStream os) throws Exception {
+        XObjectWriter.run(obj, os);
     }
 
-    public String write(Object obj, String charsetName) throws Exception {
+    /**
+     * Write an XML from a object.
+     *
+     * @param obj The object.
+     * @param charsetName The charset.
+     * @return The XML string.
+     * @throws Exception Failed to write an XML.
+     */
+    public static String write(Object obj, String charsetName) throws Exception {
         return XObjectWriter.run(obj, charsetName);
     }
 }

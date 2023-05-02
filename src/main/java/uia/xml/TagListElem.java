@@ -21,10 +21,26 @@ package uia.xml;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;;
 
+/**
+ * Used to define the element inside a list element.
+ *
+ * @author ks026400
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagListElem {
 
+    /**
+     * The element name.
+     *
+     * @return The element name.
+     */
     String name();
 
+    /**
+     * The class for this element.
+     *
+     * @return The class type.
+     */
     Class<?> type();
 }

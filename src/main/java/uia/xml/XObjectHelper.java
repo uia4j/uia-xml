@@ -22,22 +22,21 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+/**
+ * The XML Object helper methods.
+ *
+ * @author ks026400
+ *
+ */
 public final class XObjectHelper {
 
-    public static Field[] fields(Class<?> clz, Field[] fs1) {
-        Field[] fs2 = clz.getDeclaredFields();
-
-        Field[] result = new Field[fs1.length + fs2.length];
-        for (int i = 0; i < fs1.length; i++) {
-            result[i] = fs1[i];
-        }
-        for (int i = 0; i < fs2.length; i++) {
-            result[fs1.length + i] = fs2[i];
-        }
-
-        Class<?> sclz = clz.getSuperclass();
-        return sclz == null ? result : fields(sclz, result);
-    }
+    /**
+     * Convert the text to correct type. Types include Long, Integer, Short, Byte, Double, Float, Boolean and BigDecimal.
+     *
+     * @param f The field.
+     * @param text The value text.
+     * @return The value with correct type.
+     */
 
     public static Object read(Field f, String text) {
         if (text == null || text.isEmpty()) {
@@ -72,6 +71,13 @@ public final class XObjectHelper {
         return text;
     }
 
+    /**
+     * Return the annotation instance.
+     *
+     * @param clz The class type.
+     * @param anClz The annotation type.
+     * @return The annotation instance.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends Annotation> T getDeclaredAnnotation(Class<?> clz, Class<T> anClz) {
         for (Annotation an : clz.getDeclaredAnnotations()) {
@@ -82,6 +88,13 @@ public final class XObjectHelper {
         return null;
     }
 
+    /**
+     * Return the annotation instance.
+     *
+     * @param f The field.
+     * @param anClz The annotation type.
+     * @return The annotation instance.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends Annotation> T getDeclaredAnnotation(Field f, Class<T> anClz) {
         for (Annotation an : f.getDeclaredAnnotations()) {
@@ -90,5 +103,30 @@ public final class XObjectHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * Return fields including in the parent class.
+     *
+     * @param clz The class type to be searched.
+     * @return The fields in the class.
+     */
+    public static Field[] fields(Class<?> clz) {
+        return fields(clz, new Field[] {});
+    }
+
+    private static Field[] fields(Class<?> clz, Field[] fs1) {
+        Field[] fs2 = clz.getDeclaredFields();
+
+        Field[] result = new Field[fs1.length + fs2.length];
+        for (int i = 0; i < fs1.length; i++) {
+            result[i] = fs1[i];
+        }
+        for (int i = 0; i < fs2.length; i++) {
+            result[fs1.length + i] = fs2[i];
+        }
+
+        Class<?> sclz = clz.getSuperclass();
+        return sclz == null ? result : fields(sclz, result);
     }
 }
