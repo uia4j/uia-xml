@@ -16,6 +16,7 @@ uia-xml
 * @AttrInfo
 * @PropInfo
 * @ContentInfo
+* @XmlInfo
 * @TagListInfo
 * @TagListElem
 
@@ -206,6 +207,7 @@ Properties:
             <release time="2022-10-26">Good</release>
         </Book>
     </Books>
+</Lib>
 ```
 ```java
 @TagInfo(name = "Lib")

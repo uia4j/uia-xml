@@ -15,9 +15,9 @@ The annotations used to define XML document includes
 * @AttrInfo
 * @PropInfo
 * @ContentInfo
+* @XmlInfo
 * @TagListInfo
 * @TagListElem
-* @XmlInfo
 
 ### @TagInfo
 
@@ -206,6 +206,7 @@ Exammples:
             <release time="2022-10-26">Good</release>
         </Book>
     </Books>
+</Lib>
 ```
 ```java
 @TagInfo(name = "Lib")
