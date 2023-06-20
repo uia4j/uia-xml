@@ -25,4 +25,15 @@
 			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>HTKS</id>
+			<url>http://10.160.1.56:17002/repository/sapme4j-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>HTKS</id>
+			<url>http://10.160.1.56:17002/repository/sapme4j-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
