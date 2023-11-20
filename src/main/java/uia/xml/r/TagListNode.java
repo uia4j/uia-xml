@@ -79,7 +79,12 @@ class TagListNode implements Node {
                     else {
                         continue;
                     }
-                    this.objs.add(node.read(xmlReader));
+                    try {
+                        this.objs.add(node.read(xmlReader));
+                    }
+                    catch (Exception ex) {
+                        throw new Exception(this.name + " failed", ex);
+                    }
                 }
             }
             else if (event == XMLEvent.END_ELEMENT) {

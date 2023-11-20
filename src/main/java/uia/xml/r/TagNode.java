@@ -140,7 +140,12 @@ public class TagNode implements Node {
         }
 
         if (inline != null) {
-            inline.read(xmlReader);
+            try {
+                inline.read(xmlReader);
+            }
+            catch (Exception ex1) {
+                throw new Exception(this.name + " failed", ex1);
+            }
         }
         else {
             while (xmlReader.hasNext()) {
@@ -150,7 +155,12 @@ public class TagNode implements Node {
                     if (node == null) {
                         throw new Exception(xmlReader.getLocalName() + " NOT FOUND in " + this.name);
                     }
-                    node.read(xmlReader);
+                    try {
+                        node.read(xmlReader);
+                    }
+                    catch (Exception ex2) {
+                        throw new Exception(this.name + " failed", ex2);
+                    }
                 }
                 else if (event == XMLEvent.CHARACTERS || event == XMLEvent.CDATA) {
                     if (cont != null) {
