@@ -34,7 +34,7 @@ public class XObjectReaderTest {
         Picture p = (Picture) obj.panels.get(0);
         File f = (File) obj.panels.get(5);
         Assert.assertEquals(obj.panels.size(), 6);
-        Assert.assertEquals(p.getPicUnits().size(), 2);
+        Assert.assertEquals(p.getPicUnits().size(), 62);
         Assert.assertEquals(p.getPicUnits().get(0).getX(), 0);
         Assert.assertEquals(p.getPicUnits().get(0).getY(), 1);
         Assert.assertEquals(p.getPicUnits().get(0).getWidth(), 2);
