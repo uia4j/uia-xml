@@ -56,8 +56,8 @@ public class XObjectWriter {
         TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
 
         run(obj, tag.name(), writer);
+        writer.writeCharacters("\n");
         writer.writeEndDocument();
-
         return baos.toString(charsetName).replace("></", ">\n</");
     }
 
@@ -73,10 +73,12 @@ public class XObjectWriter {
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(os);
         writer.writeStartDocument();
+        writer.writeCharacters("\n");
 
         TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
 
         run(obj, tag.name(), writer);
+        writer.writeCharacters("\n");
         writer.writeEndDocument();
     }
 
@@ -108,10 +110,12 @@ public class XObjectWriter {
         }
 
         // elements
+        boolean ret = false;
         for (Field f : fs) {
             f.setAccessible(true);
             TagInfo tag2 = XObjectHelper.getDeclaredAnnotation(f, TagInfo.class);
             if (tag2 != null) {
+                ret = true;
                 Object v = null;
                 try {
                     v = f.get(obj);
@@ -124,15 +128,13 @@ public class XObjectWriter {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
-                writer.writeCharacters("\n");
-                writer.writeStartElement(name);
                 run(v, name, writer);
-                writer.writeEndElement();
                 continue;
             }
 
             TagListInfo tag3 = XObjectHelper.getDeclaredAnnotation(f, TagListInfo.class);
             if (tag3 != null) {
+                ret = true;
                 List<?> vs = null;
                 try {
                     vs = (List<?>) f.get(obj);
@@ -160,6 +162,7 @@ public class XObjectWriter {
                     }
                 }
                 if (!tag3.inline()) {
+                    writer.writeCharacters("\n");
                     writer.writeEndElement();
                 }
                 continue;
@@ -167,6 +170,7 @@ public class XObjectWriter {
 
             PropInfo prop = XObjectHelper.getDeclaredAnnotation(f, PropInfo.class);
             if (prop != null) {
+                ret = true;
                 Object v = null;
                 try {
                     v = f.get(obj);
@@ -238,6 +242,10 @@ public class XObjectWriter {
             }
         }
 
+        if (ret) {
+            writer.writeCharacters("\n");
+        }
         writer.writeEndElement();
+
     }
 }
