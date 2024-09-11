@@ -39,16 +39,16 @@ class PropNode implements Node {
 
     private final Field f;
 
-    private Class<? extends XObjectValue> parser;
+    private XObjectValue parser;
 
     PropNode(String name) {
         this.name = name;
         this.owner = null;
         this.f = null;
-        this.parser = XObjectValue.Simple.class;
+        this.parser = new XObjectValue.Simple();
     }
 
-    PropNode(String name, Object owner, Field f, Class<? extends XObjectValue> parser) {
+    PropNode(String name, Object owner, Field f, XObjectValue parser) {
         this.name = name;
         this.owner = owner;
         this.f = f;
@@ -64,7 +64,7 @@ class PropNode implements Node {
                 break;
             }
 
-            value = this.parser.newInstance().read(this.f, xmlReader.getText());
+            value = this.parser.read(this.f, xmlReader.getText());
             if (this.owner != null) {
                 this.f.set(this.owner, value);
             }

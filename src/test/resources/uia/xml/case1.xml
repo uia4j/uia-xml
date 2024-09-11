@@ -3,13 +3,13 @@
     <staff id="1001">
         <name>Kyle</name>
         <role>engineer</role>
-        <salary currency="USD">5000</salary>
+        <salary currency="USD" updated="2023-10-12">5000</salary>
         <bio><![CDATA[HTML tag <code>integration</code>]]></bio>
     </staff>
     <staff id="1002">
         <name>Avril</name>
         <role>support</role>
-        <salary currency="EUR">8000</salary>
+        <salary currency="EUR" updated="2023-10-11">8000</salary>
         <bio><![CDATA[b & q]]></bio>
     </staff>
 </Company>

@@ -19,6 +19,9 @@
 package uia.xml;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The value parser interface.
@@ -62,6 +65,39 @@ public interface XObjectValue {
         @Override
         public String write(Object value) {
             return value == null ? "" : "" + value;
+
+        }
+    }
+
+    /**
+     * Default implementation of the value parser
+     *
+     * @author ks026400
+     *
+     */
+    public static final class DateTimeValue implements XObjectValue {
+
+        private String fmt;
+
+        public DateTimeValue(String fmt) {
+            this.fmt = fmt;
+        }
+
+        @Override
+        public Object read(Field f, String text) {
+            try {
+                return new SimpleDateFormat(this.fmt).parse(text);
+            }
+            catch (ParseException e) {
+                return null;
+            }
+        }
+
+        @Override
+        public String write(Object value) {
+            return value instanceof Date
+                    ? new SimpleDateFormat(this.fmt).format((Date) value)
+                    : null;
 
         }
     }

@@ -21,6 +21,8 @@ package uia.xml;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -92,20 +94,36 @@ public class XObjectWriter {
         for (Field f : fs) {
             f.setAccessible(true);
             AttrInfo attr = XObjectHelper.getDeclaredAnnotation(f, AttrInfo.class);
-            if (attr == null) {
-                continue;
+            if (attr != null) {
+                String name = attr.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                try {
+                    String text = attr.parser().newInstance().write(f.get(obj));
+                    writer.writeAttribute(name, text);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
             }
 
-            String name = attr.name();
-            if (name.isEmpty()) {
-                name = f.getName();
-            }
-            try {
-                String text = attr.parser().newInstance().write(f.get(obj));
-                writer.writeAttribute(name, text);
-            }
-            catch (Exception ex) {
-                throw new XMLStreamException(ex);
+            DateAttrInfo attr4t = XObjectHelper.getDeclaredAnnotation(f, DateAttrInfo.class);
+            if (attr4t != null) {
+                String name = attr4t.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                try {
+                    Object dt = f.get(obj);
+                    String text = dt != null && dt instanceof Date
+                            ? new SimpleDateFormat(attr4t.format()).format((Date) dt)
+                            : "";
+                    writer.writeAttribute(name, text);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
             }
         }
 
@@ -192,6 +210,30 @@ public class XObjectWriter {
                     else {
                         writer.writeCharacters(prop.parser().newInstance().write(v));
                     }
+                }
+                writer.writeEndElement();
+                continue;
+            }
+
+            DatePropInfo prop4t = XObjectHelper.getDeclaredAnnotation(f, DatePropInfo.class);
+            if (prop4t != null) {
+                ret = true;
+                Object v = null;
+                try {
+                    v = f.get(obj);
+                }
+                catch (Exception ex) {
+                    throw new XMLStreamException(ex);
+                }
+
+                String name = prop4t.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                writer.writeCharacters("\n");
+                writer.writeStartElement(name);
+                if (v != null && v instanceof Date) {
+                    writer.writeCharacters(new SimpleDateFormat(prop4t.format()).format((Date) v));
                 }
                 writer.writeEndElement();
                 continue;

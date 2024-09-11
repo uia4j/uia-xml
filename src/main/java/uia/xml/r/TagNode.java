@@ -19,6 +19,7 @@
 package uia.xml.r;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,6 +29,8 @@ import javax.xml.stream.events.XMLEvent;
 
 import uia.xml.AttrInfo;
 import uia.xml.ContentInfo;
+import uia.xml.DateAttrInfo;
+import uia.xml.DatePropInfo;
 import uia.xml.PropInfo;
 import uia.xml.TagInfo;
 import uia.xml.TagListInfo;
@@ -81,6 +84,17 @@ public class TagNode implements Node {
                 continue;
             }
 
+            DateAttrInfo attr4t = XObjectHelper.getDeclaredAnnotation(f, DateAttrInfo.class);
+            if (attr4t != null) {
+                String name = attr4t.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                String text = xmlReader.getAttributeValue(null, name);
+                f.set(this.obj, new SimpleDateFormat(attr4t.format()).parse(text));
+                continue;
+            }
+
             TagInfo tag = XObjectHelper.getDeclaredAnnotation(f, TagInfo.class);
             if (tag != null) {
                 String name = tag.name();
@@ -117,7 +131,17 @@ public class TagNode implements Node {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
-                subs.put(name, new PropNode(name, this.obj, f, prop.parser()));
+                subs.put(name, new PropNode(name, this.obj, f, prop.parser().newInstance()));
+                continue;
+            }
+
+            DatePropInfo prop4t = XObjectHelper.getDeclaredAnnotation(f, DatePropInfo.class);
+            if (prop4t != null) {
+                String name = prop4t.name();
+                if (name.isEmpty()) {
+                    name = f.getName();
+                }
+                subs.put(name, new PropNode(name, this.obj, f, new XObjectValue.DateTimeValue(prop4t.format())));
                 continue;
             }
 
