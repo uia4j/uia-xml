@@ -60,7 +60,31 @@ public class XObjectWriter {
         run(obj, tag.name(), writer);
         writer.writeCharacters("\n");
         writer.writeEndDocument();
-        return baos.toString(charsetName).replace("></", ">\n</");
+        return baos.toString(charsetName).replace("<?xml version=\"1.0\" ?>\n", "").replace("></", ">\n</");
+    }
+
+    /**
+     * Run.
+     *
+     * @param obj The object.
+     * @param charsetName The XML charset.
+     * @return The result.
+     * @throws Exception Failed to convert.
+     */
+    public static String line(Object obj, String charsetName) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+
+        XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(baos);
+        writer.writeStartDocument();
+
+        TagInfo tag = XObjectHelper.getDeclaredAnnotation(obj.getClass(), TagInfo.class);
+
+        run(obj, tag.name(), writer);
+        writer.writeCharacters("\n");
+        writer.writeEndDocument();
+        return baos.toString(charsetName).replace("<?xml version=\"1.0\" ?>", "").replace("\n", "");
     }
 
     /**
@@ -161,6 +185,10 @@ public class XObjectWriter {
                     throw new XMLStreamException(ex);
                 }
 
+                if (tag3.ignoreIfEmpty() && (vs == null || vs.isEmpty())) {
+                    continue;
+                }
+
                 if (!tag3.inline()) {
                     String name = tag3.name();
                     if (name.isEmpty()) {
@@ -195,6 +223,10 @@ public class XObjectWriter {
                 }
                 catch (Exception ex) {
                     throw new XMLStreamException(ex);
+                }
+
+                if (prop.ignoreIfEmpty() && v == null) {
+                    continue;
                 }
 
                 String name = prop.name();

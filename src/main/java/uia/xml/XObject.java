@@ -101,4 +101,16 @@ public final class XObject {
     public static String write(Object obj, String charsetName) throws Exception {
         return XObjectWriter.run(obj, charsetName);
     }
+
+    /**
+     * Write an XML from a object.
+     *
+     * @param obj The object.
+     * @param charsetName The charset.
+     * @return The XML string.
+     * @throws Exception Failed to write an XML.
+     */
+    public static String writeLine(Object obj, String charsetName) throws Exception {
+        return XObjectWriter.line(obj, charsetName);
+    }
 }

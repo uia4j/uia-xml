@@ -50,4 +50,11 @@ public @interface PropInfo {
      * @return The value parser.
      */
     Class<? extends XObjectValue> parser() default XObjectValue.Simple.class;
+
+    /**
+     * Ignore or not
+     *
+     * @return Ignore or not.
+     */
+    boolean ignoreIfEmpty() default false;
 }

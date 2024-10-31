@@ -50,4 +50,11 @@ public @interface TagListInfo {
      * @return The definition of elements in this list.
      */
     TagListElem[] elems();
+
+    /**
+     * Ignore or not
+     *
+     * @return Ignore or not.
+     */
+    boolean ignoreIfEmpty() default false;
 }
