@@ -14,7 +14,7 @@ public class Picture extends Panel {
     @TagListInfo(elems = {
             @TagListElem(name = "picUnit", type = PicUnit.class)
     }, inline = true)
-    private ArrayList<PicUnit> picUnits;
+    private List<PicUnit> picUnits;
 
     public Picture() {
         this.picUnits = new ArrayList<PicUnit>();

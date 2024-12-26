@@ -20,9 +20,9 @@
 			<version>4.13.1</version>
 		</dependency>
 		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
+			<groupId>org.codehaus.woodstox</groupId>
+			<artifactId>woodstox-core-asl</artifactId>
+			<version>4.4.1</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

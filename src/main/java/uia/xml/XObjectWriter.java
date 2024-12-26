@@ -31,6 +31,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.codehaus.stax2.XMLOutputFactory2;
+
 /**
  * Convert an object to the XML.
  *
@@ -50,7 +52,7 @@ public class XObjectWriter {
     public static String run(Object obj, String charsetName) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory2.newInstance();
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(baos);
         writer.writeStartDocument();
@@ -60,7 +62,7 @@ public class XObjectWriter {
         run(obj, tag.name(), writer);
         writer.writeCharacters("\n");
         writer.writeEndDocument();
-        return baos.toString(charsetName).replace("<?xml version=\"1.0\" ?>\n", "").replace("></", ">\n</");
+        return baos.toString(charsetName).replace("<?xml version='1.0' encoding='UTF-8'?>\n", "").replace("></", ">\n</");
     }
 
     /**
@@ -74,7 +76,7 @@ public class XObjectWriter {
     public static String line(Object obj, String charsetName) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory2.newInstance();
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(baos);
         writer.writeStartDocument();
@@ -95,7 +97,7 @@ public class XObjectWriter {
      * @throws Exception Failed to convert.
      */
     public static void run(Object obj, OutputStream os) throws Exception {
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory2.newInstance();
 
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(os);
         writer.writeStartDocument();

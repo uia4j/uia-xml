@@ -1,6 +1,6 @@
 package uia.xml.model3;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import uia.xml.TagInfo;
 import uia.xml.TagListElem;
@@ -22,13 +22,8 @@ public class Simple {
                     @TagListElem(name = "Elem2", type = Elem2.class),
                     @TagListElem(name = "Elem4", type = Elem4.class)
             })
-    public ArrayList<Object> elem4s;
+    public List<Object> elem4s;
 
     @XmlInfo(name = "Elem5")
     public String elem5;
-
-    public Simple() {
-        this.elem4s = new ArrayList<Object>();
-    }
-
 }

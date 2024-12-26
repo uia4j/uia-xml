@@ -20,6 +20,7 @@ package uia.xml;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
 /**
@@ -38,33 +39,37 @@ public final class XObjectHelper {
      * @return The value with correct type.
      */
 
-    public static Object read(Field f, String text) {
+    public static Object read(Type type, String text) {
         if (text == null || text.isEmpty()) {
             return null;
         }
 
-        if (f.getType() == long.class || f.getType() == Long.class) {
+        if (type == null) {
+            return text;
+        }
+
+        if (type == long.class || type == Long.class) {
             return Long.valueOf(text);
         }
-        else if (f.getType() == int.class || f.getType() == Integer.class) {
+        else if (type == int.class || type == Integer.class) {
             return Integer.valueOf(text);
         }
-        else if (f.getType() == short.class || f.getType() == Short.class) {
+        else if (type == short.class || type == Short.class) {
             return Short.valueOf(text);
         }
-        else if (f.getType() == byte.class || f.getType() == Byte.class) {
+        else if (type == byte.class || type == Byte.class) {
             return Byte.valueOf(text);
         }
-        else if (f.getType() == double.class || f.getType() == Double.class) {
+        else if (type == double.class || type == Double.class) {
             return Double.valueOf(text);
         }
-        else if (f.getType() == float.class || f.getType() == Float.class) {
+        else if (type == float.class || type == Float.class) {
             return Float.valueOf(text);
         }
-        else if (f.getType() == boolean.class || f.getType() == Boolean.class) {
+        else if (type == boolean.class || type == Boolean.class) {
             return Boolean.valueOf(text);
         }
-        else if (f.getType() == BigDecimal.class) {
+        else if (type == BigDecimal.class) {
             return new BigDecimal(text);
         }
 

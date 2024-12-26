@@ -18,7 +18,8 @@
  *******************************************************************************/
 package uia.xml.r;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
@@ -31,27 +32,20 @@ import uia.xml.XObjectValue;
  * @author ks026400
  *
  */
-class PropNode implements Node {
+class PropNodeM implements Node {
 
     private final String name;
 
-    private final Object owner;
+    private final List<Object> vs;
 
-    private final Field f;
+    private final Type type;
 
     private XObjectValue parser;
 
-    PropNode(String name) {
+    PropNodeM(String name, List<Object> vs, Type type, XObjectValue parser) {
         this.name = name;
-        this.owner = null;
-        this.f = null;
-        this.parser = new XObjectValue.Simple();
-    }
-
-    PropNode(String name, Object owner, Field f, XObjectValue parser) {
-        this.name = name;
-        this.owner = owner;
-        this.f = f;
+        this.vs = vs;
+        this.type = type;
         this.parser = parser;
     }
 
@@ -64,10 +58,8 @@ class PropNode implements Node {
                 break;
             }
 
-            value = this.parser.read(this.f == null ? null : this.f.getType(), xmlReader.getText());
-            if (this.f != null && this.owner != null) {
-                this.f.set(this.owner, value);
-            }
+            value = this.parser.read(this.type, xmlReader.getText());
+            this.vs.add(value);
         }
         return value;
     }
@@ -76,5 +68,4 @@ class PropNode implements Node {
     public String toString() {
         return this.name;
     }
-
 }

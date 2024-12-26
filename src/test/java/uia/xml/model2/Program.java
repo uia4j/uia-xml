@@ -1,6 +1,7 @@
 package uia.xml.model2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import uia.xml.TagInfo;
 import uia.xml.TagListElem;
@@ -16,7 +17,7 @@ public class Program {
                     @TagListElem(name = "Text", type = Text.class),
                     @TagListElem(name = "Calendar", type = Calendar.class),
                     @TagListElem(name = "File", type = File.class) })
-    public ArrayList<Panel> panels;
+    public List<Panel> panels;
 
     public Program() {
         this.panels = new ArrayList<Panel>();

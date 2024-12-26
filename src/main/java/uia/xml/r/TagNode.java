@@ -19,7 +19,10 @@
 package uia.xml.r;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,6 +35,7 @@ import uia.xml.ContentInfo;
 import uia.xml.DateAttrInfo;
 import uia.xml.DatePropInfo;
 import uia.xml.PropInfo;
+import uia.xml.PropListInfo;
 import uia.xml.TagInfo;
 import uia.xml.TagListInfo;
 import uia.xml.XObjectHelper;
@@ -79,7 +83,7 @@ public class TagNode implements Node {
                     name = f.getName();
                 }
                 String text = xmlReader.getAttributeValue(null, name);
-                Object value = attr.parser().newInstance().read(f, text);
+                Object value = attr.parser().newInstance().read(f.getType(), text);
                 f.set(this.obj, value);
                 continue;
             }
@@ -109,18 +113,23 @@ public class TagNode implements Node {
 
             TagListInfo list = XObjectHelper.getDeclaredAnnotation(f, TagListInfo.class);
             if (list != null) {
-                @SuppressWarnings("unchecked")
-                List<Object> value = (List<Object>) f.getType().newInstance();
-                f.set(this.obj, value);
-                if (list.inline()) {
-                    inline = new TagListNode(this.name, value, list);
-                }
-                else {
-                    String name = list.name();
-                    if (name.isEmpty()) {
-                        name = f.getName();
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<Object> value = (List<Object>) list.clz().newInstance();
+                    f.set(this.obj, value);
+                    if (list.inline()) {
+                        inline = new TagListNode(this.name, value, list);
                     }
-                    subs.put(name, new TagListNode(name, value, list));
+                    else {
+                        String name = list.name();
+                        if (name.isEmpty()) {
+                            name = f.getName();
+                        }
+                        subs.put(name, new TagListNode(name, value, list));
+                    }
+                }
+                catch (Exception ex) {
+                    throw new Exception(this.name + "> " + list.name() + " failed", ex);
                 }
                 continue;
             }
@@ -131,7 +140,29 @@ public class TagNode implements Node {
                 if (name.isEmpty()) {
                     name = f.getName();
                 }
-                subs.put(name, new PropNode(name, this.obj, f, prop.parser().newInstance()));
+                if (prop.multi()) {
+                    ArrayList<Object> value = new ArrayList<>();
+                    f.set(this.obj, value);
+                    ParameterizedType pt = (ParameterizedType) f.getGenericType();
+                    Type gt = null;
+                    if (pt != null) {
+                        gt = pt.getActualTypeArguments()[0];
+                    }
+
+                    subs.put(name, new PropNodeM(name, value, gt, prop.parser().newInstance()));
+                }
+                else {
+                    subs.put(name, new PropNode(name, this.obj, f, prop.parser().newInstance()));
+                }
+                continue;
+            }
+
+            PropListInfo plist = XObjectHelper.getDeclaredAnnotation(f, PropListInfo.class);
+            if (plist != null) {
+                @SuppressWarnings("unchecked")
+                List<Object> value = (List<Object>) plist.clz().newInstance();
+                f.set(this.obj, value);
+                subs.put(plist.name(), new PropListNode(plist.name(), value));
                 continue;
             }
 
@@ -164,32 +195,26 @@ public class TagNode implements Node {
         }
 
         if (inline != null) {
-            try {
-                inline.read(xmlReader);
-            }
-            catch (Exception ex1) {
-                throw new Exception(this.name + " failed", ex1);
-            }
+            inline.read(xmlReader);
         }
         else {
             while (xmlReader.hasNext()) {
                 int event = xmlReader.next();
                 if (event == XMLEvent.START_ELEMENT) {
-                    Node node = subs.get(xmlReader.getLocalName());
+                    String name = xmlReader.getLocalName();
+                    if (name.equals("rcs_check")) {
+                        System.out.println();
+                    }
+                    Node node = subs.get(name);
                     if (node == null) {
-                        throw new Exception(xmlReader.getLocalName() + " NOT FOUND in " + this.name);
+                        throw new Exception(this.name + "> " + name + " NOT FOUND");
                     }
-                    try {
-                        node.read(xmlReader);
-                    }
-                    catch (Exception ex2) {
-                        throw new Exception(this.name + " failed", ex2);
-                    }
+                    node.read(xmlReader);
                 }
                 else if (event == XMLEvent.CHARACTERS || event == XMLEvent.CDATA) {
                     if (cont != null) {
                         XObjectValue xov = cont.parser().newInstance();
-                        contF.set(this.obj, xov.read(contF, xmlReader.getText()));
+                        contF.set(this.obj, xov.read(contF.getType(), xmlReader.getText()));
                     }
                 }
                 else if (event == XMLEvent.END_ELEMENT) {

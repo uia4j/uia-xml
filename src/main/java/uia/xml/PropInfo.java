@@ -57,4 +57,6 @@ public @interface PropInfo {
      * @return Ignore or not.
      */
     boolean ignoreIfEmpty() default false;
+
+    boolean multi() default false;
 }

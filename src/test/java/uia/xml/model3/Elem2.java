@@ -1,6 +1,6 @@
 package uia.xml.model3;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
 import uia.xml.AttrInfo;
 import uia.xml.PropInfo;
@@ -22,7 +22,7 @@ public class Elem2 {
     public static class BoolValue implements XObjectValue {
 
         @Override
-        public Object read(Field f, String text) {
+        public Object read(Type type, String text) {
             return "Y".equals(text) ? true : false;
         }
 

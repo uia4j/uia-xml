@@ -1,6 +1,6 @@
 package uia.xml.model1;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import uia.xml.TagInfo;
 import uia.xml.TagListElem;
@@ -12,9 +12,5 @@ public class Company {
     @TagListInfo(
             inline = true,
             elems = { @TagListElem(name = "staff", type = Staff.class) })
-    public final ArrayList<Staff> staffs;
-
-    public Company() {
-        this.staffs = new ArrayList<Staff>();
-    }
+    public List<Staff> staffs;
 }

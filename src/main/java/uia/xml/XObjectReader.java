@@ -27,6 +27,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
+import org.codehaus.stax2.XMLInputFactory2;
+
 import uia.xml.r.TagNode;
 
 /**
@@ -110,7 +112,7 @@ public final class XObjectReader {
      * @throws Exception Failed to convert.
      */
     public static <T> T run(Class<T> clz, InputStream is) throws Exception {
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLInputFactory xmlInputFactory = XMLInputFactory2.newInstance();
 
         // https://rules.sonarsource.com/java/RSPEC-2755
         // prevent xxe

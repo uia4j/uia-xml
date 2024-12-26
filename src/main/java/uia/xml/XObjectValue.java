@@ -18,7 +18,7 @@
  *******************************************************************************/
 package uia.xml;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +39,7 @@ public interface XObjectValue {
      * @return Converted result.
      * @throws Exception Failed to convert.
      */
-    public Object read(Field f, String text) throws Exception;
+    public Object read(Type type, String text) throws Exception;
 
     /**
      * Convert object to a string.
@@ -58,8 +58,8 @@ public interface XObjectValue {
     public static final class Simple implements XObjectValue {
 
         @Override
-        public Object read(Field f, String text) {
-            return XObjectHelper.read(f, text);
+        public Object read(Type type, String text) {
+            return XObjectHelper.read(type, text);
         }
 
         @Override
@@ -84,7 +84,7 @@ public interface XObjectValue {
         }
 
         @Override
-        public Object read(Field f, String text) {
+        public Object read(Type type, String text) {
             try {
                 return new SimpleDateFormat(this.fmt).parse(text);
             }

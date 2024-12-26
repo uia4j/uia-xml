@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simple>
+    <Values>
+    	<Value>value1</Value>
+        <Value>value2</Value>
+        <Value>value3</Value>
+        <Value>value4</Value>
+        <Value>value5</Value>
+        <Value>value6</Value>
+        <Value>value7</Value>
+    </Values>
+    <Why>
+        <A>A</A>
+        <B>B</B>
+        <C>C</C>
+        <C>C</C>
+        <C>C</C>
+        <C>C</C>
+    </Why>
+</Simple>
